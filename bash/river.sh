@@ -7,17 +7,9 @@
 main () {
 	# set up variables
 	SILENT=false
-	currentRiver=""
-
-	# Change working directory to the temp dir
-#	cd /tmp
-
 	setupQuiet
 	downloadRiverData
 	prepareData
-
-	# final print out
-	printOut "The Tangi River is currently $currentRiver at Robert."
 }
 
 setupQuiet () {
@@ -48,13 +40,5 @@ prepareData () {
 	sed -i "2d;${lastline}d" "riverOBS.xml"
 }
 
-printOut () {
-	# dumb function that checks to see if SILENT is true and redirects output of echo
-	if [[ "${SILENT}" == "true" ]]; then
-		echo $1 >&7
-	else
-		echo $1
-	fi
-}
 
 main "$@"

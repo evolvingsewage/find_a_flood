@@ -1,6 +1,5 @@
 """ Author : Carl Perez
-    Description : Breaks the yml file downloaded into something a webpage
-                  can use.
+    Description : Downloads and parses the river data into something a human can use
 """
 import os
 import xml.etree.ElementTree as ET

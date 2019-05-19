@@ -185,3 +185,4 @@ $RECYCLE.BIN/
 
 # river data
 python/riverOBS.xml
+*.db

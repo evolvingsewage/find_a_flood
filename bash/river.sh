@@ -1,9 +1,7 @@
 #!/bin/bash
-
 # river bash script
 # author: Blake
 # downloads river data and prints the current river hight, flood stages, and predected river hight
-
 main () {
 	# set up variables
 	SILENT=false
@@ -12,17 +10,19 @@ main () {
 	prepareData
 }
 
+
 setupQuiet () {
 	exec 7>&1	# save a copy of the current stdout
 	exec >/dev/null	# redirect everyones else's stdout to /dev/null
 	SILENT=true
 }
 
+
 downloadRiverData () {
 	# Download current river data from the goverment
 	wget --quiet https://water.weather.gov/ahps/download.php?data=kmz_obs
-
 }
+
 
 prepareData () {
 	# Rename the download and unzip the file, then remove the zip

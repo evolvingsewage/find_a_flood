@@ -44,6 +44,7 @@ def clean_category_data(category):
         clean_category_dict[river_name]["coordinates"] = river_coord
     return clean_category_dict
 
+
 def clean_xml_data(parsed_data):
     """ Clean up data for use in a dictionary
         DO NOT THROW RAW XML STUFF HERE, IT WILL NOT WORK
@@ -62,7 +63,3 @@ def clean_xml_data(parsed_data):
         else:
             continue
     return clean_river_data
-
-for category, river in clean_xml_data(import_riverobs()).items():
-    print(category, river)
-    print("\n")

@@ -1,5 +1,5 @@
 """ Author : Carl Perez
-    Description : Downloads and parses the river data into something a human can use
+    Description : Parses the river data into something a human can use
 """
 import os
 import xml.etree.ElementTree as ET

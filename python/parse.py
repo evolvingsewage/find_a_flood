@@ -8,13 +8,27 @@ from os import chdir, getcwd
 # define constants
 THIS_DIR = getcwd()
 
-def import_riverobs():
+def download_river_data():
+    """ Use BASH to download river data
+    Args:
+        none
+    Returns:
+        none
+    """
+    subprocess.check_call("bash ../bash/river.sh", shell=True)
+    return None
+
+
+def import_riverobs(resync=False):
     """ Using the Python xml library to create an navigatable object
     Args:
-        None
+        resync - whether or not to re-download data
+                 THIS HAS SIGNIFICANT PERFORMANCE EFFECTS
     Returns:
         xml_obj - a navigatable XML object
     """
+    if resync:
+        download_river_data()
     tree = ET.parse(os.path.join(THIS_DIR, "riverOBS.xml"))
     root = tree.getroot()
     return root
@@ -31,7 +45,7 @@ def clean_category_data(category):
     for river in category.iter("Placemark"):
         # retrieve elements as strings and format
         river_name = river.find("name")
-        river_ds = ET.tostring(river.find("description"), encoding="unicode")
+        river_ds = ET.tostring(river.find("description"))
         river_coord = river.find("Point")
         river_coord = "".join(river_coord.itertext()).strip()
         river_name = "".join(river_name.itertext()).strip()

@@ -22,3 +22,7 @@ optional arguments:
   --referesh-data       Whether or not to rebuild the database of results.
 
 ```
+
+## Credits
+* River Level Information - https://water.weather.gov/ahps/
+* Distance on Globe from Haversine Formula - https://andrew.hedges.name/experiments/haversine/

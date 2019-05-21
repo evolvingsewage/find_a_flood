@@ -48,9 +48,34 @@ def init_river_db(resync=False):
     # build and populate tables
     for category, river_info in river_data.items():
         c_cat = scrub_table_name(category)
-        db_cursor.execute('''CREATE TABLE IF NOT EXISTS {}(RIVER TEXT,
+        db_cursor.execute('''CREATE TABLE IF NOT EXISTS {0}(RIVER TEXT,
                              DESCRIPTION TEXT,COORD TEXT)'''.format(c_cat))
         for name, info in river_info.items():
             clean_info = (name, info["description"], info["coordinates"])
-            db_cursor.execute('''INSERT INTO {} VALUES (?,?,?)
+            db_cursor.execute('''INSERT INTO {0} VALUES (?,?,?)
                               '''.format(c_cat), clean_info)
+
+    # commit & close
+    connection.commit()
+    connection.close()
+
+
+def collect_coord(category):
+    """ Collect all the coordinates in the database of a category
+    Args:
+        category
+    Returns:
+        coords - a list of tuples of all the coords
+    """
+    # db connection init
+    connection, db_cursor = create_db_cursor()
+    c_cat = scrub_table_name(category)
+
+    # pull list of coords and turn into tuples
+    coords = []
+    raw_coords = db_cursor.execute(''' SELECT COORD FROM {0}'''.format(c_cat))
+    for coord in raw_coords:
+        # I AM SO SORRY - converted a tuple to a string and back to a list of floats to a tuple
+        coord = reversed(tuple(map(float, "".join(coord).split(","))))
+        coords.append(coord)
+    return coords

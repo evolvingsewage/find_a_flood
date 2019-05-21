@@ -80,12 +80,9 @@ def get_rivers_within_dist(city, state, radius, category="Major_Stage"):
         rivers - a dictionary with rivers containing info from database and
                  distance from city
     """
-    distances = compare_long_lat(get_city_coord(city, state))
-
+    distances = compare_long_lat(get_city_coord(city, state), category)
+    rivers = {}
     for river_coords, distance in distances.items():
-        if distance > float(radius):
-            print("{0} < {1}".format(distance, radius))
-            print(database.select_where_coord(str(river_coords), category))
-    return
-
-get_rivers_within_dist("Shreveport", "LA", 50)
+        if distance < float(radius):
+            rivers[distance] = (database.select_where_coord(str(river_coords), category))
+    return rivers

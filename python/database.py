@@ -81,7 +81,7 @@ def collect_coord(category):
     return coords
 
 
-def select_where_coord(coordinates ,category):
+def select_where_coord(coordinates, category):
     """ Select rivers with the coordinates specified in a category
     Args:
         coordinates - a string of coordinates

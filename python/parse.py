@@ -47,8 +47,9 @@ def clean_category_data(category):
         river_name = river.find("name")
         river_ds = ET.tostring(river.find("description"))
         river_coord = river.find("Point")
-        river_coord = "".join(river_coord.itertext()).strip()
-        river_coord = ", ".join(reversed(river_coord.split(", ")))
+        # remove those annoying zeros
+        river_coord = "".join(river_coord.itertext()).strip().strip("0")
+        river_coord = ", ".join(reversed(river_coord.split(", "))).strip("0")
         river_name = "".join(river_name.itertext()).strip()
 
         # place in dict

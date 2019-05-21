@@ -76,7 +76,6 @@ def collect_coord(category):
     coords = []
     raw_coords = db_cursor.execute(''' SELECT COORD FROM {0}'''.format(c_cat))
     for coord in raw_coords:
-        # I AM SO SORRY - converted a tuple to a string and back to a list of floats to a tuple
         coord = tuple(map(float, "".join(coord).split(",")))
         coords.append(coord)
     return coords
@@ -93,14 +92,12 @@ def select_where_coord(coordinates ,category):
     connection, db_cursor = create_db_cursor()
     c_cat = scrub_table_name(category)
 
+    # a lot of ugly conversions, first removing fluff from string and turning to a list
+    # then mapping all the strings in the list into floats, then making the list a tuple
+    # THEN FINALLY making that tuple safe for use in SQL
     clean_coords = tuple(map(float, coordinates.lstrip().strip("(,)").split(", ")))
-    print(clean_coords)
-
-
     clean_coords = (", ".join(map(str, clean_coords)),)
-    print(clean_coords)
+
     river_info = db_cursor.execute(''' SELECT * FROM {0} WHERE COORD=? '''.format(c_cat),
                                    clean_coords)
     return river_info.fetchone()
-
-init_river_db()

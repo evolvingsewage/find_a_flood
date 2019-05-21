@@ -4,7 +4,7 @@
 import database
 import requests
 from geopy.geocoders import Nominatim
-from math import sin, cos, sqrt, atan2, radians
+from math import degrees, sin, cos, sqrt, atan2, radians
 
 # approximate radius of earth in km
 RADIUS_EARTH = 6373.0
@@ -28,16 +28,18 @@ def compare_long_lat(coords, category="Major_Stage"):
         coords - a tuple containing coords, lat then long
         category - a category of river flooding stage
     Returns:
-        distances - a float of the distance
+        distances - a dictionary matching river coords to the distance from city
     """
     # init vars
     lat_point, lon_point = coords
     lat_point = radians(abs(lat_point))
     lon_point = radians(abs(lon_point))
-    distances = []
+    distances = {}
 
     # thanks andrew hedges, this saved me a ton of time
     for lat_river, lon_river in database.collect_coord(category):
+        deg_lat_river = lat_river
+        deg_lon_river = lon_river
         lat_river = radians(abs(lat_river))
         lon_river = radians(abs(lon_river))
         d_lon = lon_river - lon_point
@@ -48,7 +50,7 @@ def compare_long_lat(coords, category="Major_Stage"):
 
         distance = RADIUS_EARTH * side_c
         distance = convert_km_to_mi(distance)
-        distances.append(distance)
+        distances[(deg_lat_river, deg_lon_river)] = distance
 
     return distances
 
@@ -62,6 +64,28 @@ def get_city_coord(city, state):
         coords - the coordinates of the city
     """
     geolocator = Nominatim(user_agent="find_a_flood")
-    location = geolocator.geocode("{0}, {1}".format(city, state))
-    coord = (float(location.latitude), float(location.longitude))
-    return coord
+    location = geolocator.geocode("{0}, {1}".format(str(city), str(state)))
+    coords = float(location.latitude), float(location.longitude)
+    return coords
+
+
+def get_rivers_within_dist(city, state, radius, category="Major_Stage"):
+    """ Get the name of the rivers within a category within a specified distance
+    Args:
+        city - the city name
+        state - the state abbrev.
+        radius - the specified distance range in miles
+        category - a category of a river flooding stage
+    Returns:
+        rivers - a dictionary with rivers containing info from database and
+                 distance from city
+    """
+    distances = compare_long_lat(get_city_coord(city, state))
+
+    for river_coords, distance in distances.items():
+        if distance > float(radius):
+            print("{0} < {1}".format(distance, radius))
+            print(database.select_where_coord(str(river_coords), category))
+    return
+
+get_rivers_within_dist("Shreveport", "LA", 50)

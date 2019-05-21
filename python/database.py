@@ -5,6 +5,7 @@ import parse
 import re
 import sqlite3
 import subprocess
+from itertools import chain
 
 def create_db_cursor():
     """ Create DB cursor
@@ -76,6 +77,30 @@ def collect_coord(category):
     raw_coords = db_cursor.execute(''' SELECT COORD FROM {0}'''.format(c_cat))
     for coord in raw_coords:
         # I AM SO SORRY - converted a tuple to a string and back to a list of floats to a tuple
-        coord = reversed(tuple(map(float, "".join(coord).split(","))))
+        coord = tuple(map(float, "".join(coord).split(",")))
         coords.append(coord)
     return coords
+
+
+def select_where_coord(coordinates ,category):
+    """ Select rivers with the coordinates specified in a category
+    Args:
+        coordinates - a string of coordinates
+    Returns:
+        river_info
+    """
+    # db connection init
+    connection, db_cursor = create_db_cursor()
+    c_cat = scrub_table_name(category)
+
+    clean_coords = tuple(map(float, coordinates.lstrip().strip("(,)").split(", ")))
+    print(clean_coords)
+
+
+    clean_coords = (", ".join(map(str, clean_coords)),)
+    print(clean_coords)
+    river_info = db_cursor.execute(''' SELECT * FROM {0} WHERE COORD=? '''.format(c_cat),
+                                   clean_coords)
+    return river_info.fetchone()
+
+init_river_db()

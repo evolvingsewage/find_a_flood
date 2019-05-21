@@ -52,7 +52,7 @@ def parse_args():
     parser.add_argument("radius", type=int, help="The search radius, in miles.")
     parser.add_argument("--category", type=str, choices=["Low_Water", "No_Flooding",
                                      "Action_Stage","Minor_Stage", "Moderate_Stage",
-                                     "Minor_Stage", "Major_Stage", "Observations_are_not_current",
+                                     "Major_Stage", "Observations_are_not_current",
                                      "Not_Defined"],
                         help="The category of flooding to search for.")
     parser.add_argument("--refresh_data", action="store_true",

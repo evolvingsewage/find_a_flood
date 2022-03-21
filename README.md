@@ -32,6 +32,9 @@ optional arguments:
 
 ```
 
+When the script runs, it will populate a database with the information from the XML file provided by the National Weather Service, then
+it navigates that database to find floods within the parameters given by the user. 
+
 ## Credits
 * River Level Information - https://water.weather.gov/ahps/
 * Distance on Globe from Haversine Formula - https://andrew.hedges.name/experiments/haversine/

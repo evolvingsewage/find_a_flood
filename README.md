@@ -1,6 +1,15 @@
 ## Description
 Use this script to find information on potentially flooding rivers in your area.
 
+## PreReqs
+Prerequisites are installed by virtualenv, don't mess up your own environment
+to run this! Run everything from the main directory of this repository. I wrote
+everything with that in mind. 
+
+Before running anything, run the venv\_creator.sh script to create the virtual
+environment. Then, run the river.sh script to pull the latest river flooding
+data.
+
 ## Usage
 
 ```

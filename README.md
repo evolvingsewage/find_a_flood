@@ -1,7 +1,7 @@
 ## Description
 Use this script to find information on potentially flooding rivers in your area.
 
-## PreReqs
+## Prerequisites
 Prerequisites are installed by virtualenv, don't mess up your own environment
 to run this! Run everything from the main directory of this repository. I wrote
 everything with that in mind. 

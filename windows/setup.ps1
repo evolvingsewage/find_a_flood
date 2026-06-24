@@ -20,4 +20,4 @@ if (-not (Test-Path $VenvPath)) {
 & "$VenvPath\Scripts\python.exe" -m pip install --upgrade pip
 & "$VenvPath\Scripts\pip.exe" install -r $RequirementsFile
 
-Write-Host "Setup complete. Run the tool with: .\windows\run.ps1 <city> <state> <radius>"
+Write-Host "Setup complete."

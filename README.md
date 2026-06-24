@@ -14,15 +14,22 @@ Water Prediction Service; no separate download script is needed.
 ### Windows
 ```
 .\windows\setup.ps1
-.\windows\run.ps1 <city> <state> <radius>
+.\venv\Scripts\Activate.ps1
 ```
 
 `setup.ps1` creates `venv\` with the `py` launcher and installs
-`requirements.txt`. `run.ps1` runs `find_a_flood.py` through that venv,
-forwarding any arguments (e.g. `.\windows\run.ps1 Austin TX 25 --category
-minor`).
+`requirements.txt`.
+
+### Linux
+```
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
 ## Usage
+
+Run from the python directory.
 
 ```
 usage: find_a_flood.py [-h]

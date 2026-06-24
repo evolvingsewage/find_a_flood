@@ -11,6 +11,17 @@ Create a virtual environment (e.g. `python -m venv venv`) and install
 `find_a_flood.py` on first run (or with `--refresh_data`) from NOAA's National
 Water Prediction Service; no separate download script is needed.
 
+### Windows
+```
+.\windows\setup.ps1
+.\windows\run.ps1 <city> <state> <radius>
+```
+
+`setup.ps1` creates `venv\` with the `py` launcher and installs
+`requirements.txt`. `run.ps1` runs `find_a_flood.py` through that venv,
+forwarding any arguments (e.g. `.\windows\run.ps1 Austin TX 25 --category
+minor`).
+
 ## Usage
 
 ```
@@ -27,9 +38,9 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  --category {Low_Water,No_Flooding,Action_Stage,Minor_Stage,Moderate_Stage,Minor_Stage,Observations_are_not_current,Not_Defined}
+  --category {low_threshold,no_flooding,action,minor,moderate,major,obs_not_current,not_defined,out_of_service}
                         The category of flooding to search for.
-  --referesh-data       Whether or not to rebuild the database of results.
+  --refresh_data        Whether or not to rebuild the database of results.
 
 ```
 

@@ -20,7 +20,7 @@ setupQuiet () {
 
 downloadRiverData () {
 	# Download current river data from the goverment
-	wget --quiet https://water.weather.gov/ahps/download.php?data=kmz_obs
+	curl --silent -o 'download.php?data=kmz_obs' 'https://water.weather.gov/ahps/download.php?data=kmz_obs'
 }
 
 

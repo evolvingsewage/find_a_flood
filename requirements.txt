@@ -1,2 +1,2 @@
-geopy==2.2.0
-requests==2.27.1
+geopy==2.4.1
+requests==2.34.2

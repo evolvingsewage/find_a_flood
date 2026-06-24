@@ -1,81 +1,84 @@
 """ Author : Carl Perez
     Description : Parses the river data into something a human can use
 """
+import json
 import os
-import subprocess
-import xml.etree.ElementTree as ET
-from os import chdir, getcwd
+import requests
+from os import getcwd
 
 # define constants
 THIS_DIR = getcwd()
 
+# NOAA retired the old AHPS KMZ download in favor of this ArcGIS feature
+# service, which serves the same river gauge data as paginated GeoJSON.
+NWPS_GAUGE_QUERY_URL = ("https://mapservices.weather.noaa.gov/eventdriven/"
+                        "rest/services/water/riv_gauges/MapServer/0/query")
+PAGE_SIZE = 2000
+
+
 def download_river_data():
-    """ Use BASH to download river data
+    """ Download all river gauge data from NOAA's NWPS feature service
     Args:
         none
     Returns:
         none
     """
-    subprocess.check_call("bash ../bash/river.sh", shell=True)
+    features = []
+    offset = 0
+    while True:
+        params = {
+            "where": "1=1",
+            "outFields": "*",
+            "returnGeometry": "false",
+            "resultRecordCount": PAGE_SIZE,
+            "resultOffset": offset,
+            "f": "geojson",
+        }
+        response = requests.get(NWPS_GAUGE_QUERY_URL, params=params, timeout=30)
+        response.raise_for_status()
+        page = response.json()["features"]
+        if not page:
+            break
+        features.extend(page)
+        offset += len(page)
+
+    with open(os.path.join(THIS_DIR, "riverOBS.json"), "w") as river_file:
+        json.dump(features, river_file)
     return None
 
 
 def import_riverobs(resync=False):
-    """ Using the Python xml library to create an navigatable object
+    """ Load the river gauge data, downloading it first if needed
     Args:
         resync - whether or not to re-download data
                  THIS HAS SIGNIFICANT PERFORMANCE EFFECTS
     Returns:
-        xml_obj - a navigatable XML object
+        features - a list of GeoJSON feature dicts
     """
-    if resync:
+    river_file_path = os.path.join(THIS_DIR, "riverOBS.json")
+    if resync or not os.path.exists(river_file_path):
         download_river_data()
-    tree = ET.parse(os.path.join(THIS_DIR, "riverOBS.xml"))
-    root = tree.getroot()
-    return root
+    with open(river_file_path) as river_file:
+        return json.load(river_file)
 
 
-def clean_category_data(category):
-    """ Get all the flooding information from a category
+def clean_xml_data(features):
+    """ Group gauge features by flood category
     Args:
-        category - the xml element containing rivers of a category
+        features - the list of GeoJSON feature dicts (from import_riverobs)
     Returns:
-        rivers_dict - all the rivers in a category in a dictionary
-    """
-    clean_category_dict = {}
-    for river in category.iter("Placemark"):
-        # retrieve elements as strings and format
-        river_name = river.find("name")
-        river_ds = ET.tostring(river.find("description"))
-        river_coord = river.find("Point")
-        # remove those annoying zeros
-        river_coord = "".join(river_coord.itertext()).strip().strip("0")
-        river_coord = ", ".join(reversed(river_coord.split(", "))).strip("0")
-        river_name = "".join(river_name.itertext()).strip()
-
-        # place in dict
-        clean_category_dict[river_name] = {}
-        #TODO: parse HTML here for a full dict
-        clean_category_dict[river_name]["description"] = "it's a river"
-        clean_category_dict[river_name]["coordinates"] = river_coord
-    return clean_category_dict
-
-
-def clean_xml_data(parsed_data):
-    """ Clean up data for use in a dictionary
-        DO NOT THROW RAW XML STUFF HERE, IT WILL NOT WORK
-    Args:
-        parsed_data - the parsed data set (created by import_riverobs, ideally)
-    Returns:
-        clean_river_data - river data in a dictionary for ease of navigation
+        clean_river_data - all rivers grouped by category in a dictionary
     """
     clean_river_data = {}
-    for element in parsed_data.iter("Folder"):
-        category_string = element.find("name")
-        # if it is actually a category, create a dict for it
-        if category_string is not None:
-            category_string = "".join(category_string.itertext())
-            clean_river_data[category_string] = clean_category_data(element)
-        else:
-            continue
+    for feature in features:
+        props = feature["properties"]
+        category = props["status"]
+        river_name = props["waterbody"] or props["gaugelid"]
+        coordinates = "{0}, {1}".format(props["latitude"], props["longitude"])
+
+        clean_river_data.setdefault(category, {})
+        clean_river_data[category][river_name] = {
+            "description": "it's a river",
+            "coordinates": coordinates,
+        }
     return clean_river_data

@@ -2,20 +2,21 @@
 Use this script to find information on potentially flooding rivers in your area.
 
 ## Prerequisites
-Prerequisites are installed by virtualenv, don't mess up your own environment
-to run this! Run everything from the main directory of this repository. I wrote
-everything with that in mind. 
+Prerequisites are installed into a virtual environment, don't mess up your own
+environment to run this! Run everything from the python/ directory of this
+repository. I wrote everything with that in mind.
 
-Before running anything, run the venv\_creator.sh script to create the virtual
-environment. Then, run the river.sh script to pull the latest river flooding
-data.
+Create a virtual environment (e.g. `python -m venv venv`) and install
+`requirements.txt` into it. River gauge data is downloaded automatically by
+`find_a_flood.py` on first run (or with `--refresh_data`) from NOAA's National
+Water Prediction Service; no separate download script is needed.
 
 ## Usage
 
 ```
 usage: find_a_flood.py [-h]
-                       [--category {Low_Water,No_Flooding,Action_Stage,Minor_Stage,Moderate_Stage,Minor_Stage,Observations_are_not_current,Not_Defined}]
-                       [--referesh-data]
+                       [--category {low_threshold,no_flooding,action,minor,moderate,major,obs_not_current,not_defined,out_of_service}]
+                       [--refresh_data]
                        city state radius
 
 positional arguments:
@@ -32,9 +33,9 @@ optional arguments:
 
 ```
 
-When the script runs, it will populate a database with the information from the XML file provided by the National Weather Service, then
-it navigates that database to find floods within the parameters given by the user. 
+When the script runs, it will populate a database with gauge data from NOAA's National Water Prediction Service, then
+it navigates that database to find floods within the parameters given by the user.
 
 ## Credits
-* River Level Information - https://water.weather.gov/ahps/
+* River Level Information - https://water.noaa.gov/
 * Distance on Globe from Haversine Formula - https://andrew.hedges.name/experiments/haversine/

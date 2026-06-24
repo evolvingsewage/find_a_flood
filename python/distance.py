@@ -20,7 +20,7 @@ def convert_km_to_mi(km):
     return mi
 
 
-def compare_long_lat(coords, category="Major_Stage"):
+def compare_long_lat(coords, category="major"):
     """ Gives the kilometer distance between a point and all rivers of
         a category, using derivation of haversine formula from:
         https://andrew.hedges.name/experiments/haversine/
@@ -69,7 +69,7 @@ def get_city_coord(city, state):
     return coords
 
 
-def get_rivers_within_dist(city, state, radius, category="Major_Stage"):
+def get_rivers_within_dist(city, state, radius, category="major"):
     """ Get the name of the rivers within a category within a specified distance
     Args:
         city - the city name

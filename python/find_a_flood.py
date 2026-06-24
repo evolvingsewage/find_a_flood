@@ -18,7 +18,7 @@ def main(args):
     else:
         rivers = distance.get_rivers_within_dist(args["city"], args["state"],
                                                  args["radius"])
-        category = "Major Stage"
+        category = "major"
 
     if rivers:
         for distance_float, river_info in sorted(rivers.items()):
@@ -50,10 +50,9 @@ def parse_args():
                         help="The two letter abbreviation of the state the city is in.",
                         type=str)
     parser.add_argument("radius", type=int, help="The search radius, in miles.")
-    parser.add_argument("--category", type=str, choices=["Low_Water", "No_Flooding",
-                                     "Action_Stage","Minor_Stage", "Moderate_Stage",
-                                     "Major_Stage", "Observations_are_not_current",
-                                     "Not_Defined"],
+    parser.add_argument("--category", type=str, choices=["low_threshold", "no_flooding",
+                                     "action", "minor", "moderate", "major",
+                                     "obs_not_current", "not_defined", "out_of_service"],
                         help="The category of flooding to search for.")
     parser.add_argument("--refresh_data", action="store_true",
                         help="""Whether or not to re-sync the database of results.""")

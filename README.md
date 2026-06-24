@@ -6,10 +6,11 @@ Prerequisites are installed into a virtual environment, don't mess up your own
 environment to run this! Run everything from the python/ directory of this
 repository. I wrote everything with that in mind.
 
+### Linux
 Create a virtual environment (e.g. `python -m venv venv`) and install
 `requirements.txt` into it. River gauge data is downloaded automatically by
 `find_a_flood.py` on first run (or with `--refresh_data`) from NOAA's National
-Water Prediction Service; no separate download script is needed.
+Water Prediction Service.
 
 ### Windows
 ```
